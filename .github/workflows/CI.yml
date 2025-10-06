@@ -5,19 +5,22 @@ jobs:
     build-and-test:
         runs-on: ubuntu-latest
         steps:
-            - name: Baixar o repositório
+            - name: 1. Baixar o repositório
               uses: actions/checkout@v4
 
-            - name: Instalar o Python
+            - name: 2. Instalar o Python
               uses: actions/setup-python@v5
               with:
                 python-version: 3.11.5
 
-            - name: Instalar o Poetry via pip
-              run: pip install poetry
+            - name: 3. Instalar o uv
+              run: curl -LsSf https://astral.sh/uv/install.sh | sh
 
-            - name: Instalar dependências com o Poetry
-              run: poetry install
+            - name: 4. Instalar uv ao path
+              run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-            - name: Rodar minha rotina de testes com o Poetry
-              run: poetry run pytest tests -v
+            - name: 5. Instalar dependências com o Poetry
+              run: uv pip install -r requirements.txt
+
+            - name: 6. Rodar minha rotina de testes com o Poetry
+              run: uv run pytest tests -v
