@@ -1,0 +1,1 @@
+from app.funcao import ola_turma
