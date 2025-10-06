@@ -16,11 +16,17 @@ jobs:
             - name: 3. Instalar o uv
               run: curl -LsSf https://astral.sh/uv/install.sh | sh
 
-            - name: 4. Instalar uv ao path
+            - name: 4. Instalar uv ao PATH
               run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-            - name: 5. Instalar dependências com o Poetry
+            - name: 4.1 Criar venv com uv
+              run: |
+                uv venv --python "$(which python)"  # cria .venv usando o Python do setup-python
+                echo "VIRTUAL_ENV=$GITHUB_WORKSPACE/.venv" >> $GITHUB_ENV
+                echo "$GITHUB_WORKSPACE/.venv/bin" >> $GITHUB_PATH
+
+            - name: 5. Instalar dependências com o uv
               run: uv pip install -r requirements.txt
 
-            - name: 6. Rodar minha rotina de testes com o Poetry
+            - name: 6. Rodar minha rotina de testes com o uv
               run: uv run pytest tests -v
