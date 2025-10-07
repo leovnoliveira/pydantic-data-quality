@@ -1,5 +1,2 @@
-
-
-
 def ola_turma():
-    print("Olá turma!")
+    return "ola jornada"
