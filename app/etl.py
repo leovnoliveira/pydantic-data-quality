@@ -3,6 +3,8 @@ from sqlalchemy import create_engine
 from dotenv import load_dotenv
 from pathlib import Path
 
+import pandera as pa
+
 import os
 
 def load_settings():
@@ -33,10 +35,14 @@ def extrair_do_sql(query: str) -> pd.DataFrame:
     with engine.connect() as connection, connection.begin():
         df = pd.read_sql_query(query, connection)
 
-    return df
+    return df_crm
 
 
 if __name__ == "__main__":
     query = "SELECT * FROM produtos_bronze"
-    df = extrair_do_sql(query)
-    print(df.head())
+    df_crm = extrair_do_sql(query)
+    schema_crm = pa.infer_schema(df_crm)
+    print(schema_crm)
+
+    with open("schema_crm.py", "w", encoding="utf-8") as f:
+        f.write(schema_crm.to_script())

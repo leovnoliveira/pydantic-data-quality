@@ -1,4 +1,4 @@
-from app.etl import load_settings, exctracao, transformacao, load
+from app.etl import load_settings
 
 
 def test_config():
