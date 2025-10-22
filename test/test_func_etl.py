@@ -1,4 +1,4 @@
-from app.etl import load_settings
+from app.etl_inferschema import load_settings
 
 
 def test_config():

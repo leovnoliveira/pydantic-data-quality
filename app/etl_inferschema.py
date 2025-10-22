@@ -1,11 +1,12 @@
-import pandas as pd
-from sqlalchemy import create_engine
-from dotenv import load_dotenv
+import os
 from pathlib import Path
 
+import pandas as pd
 import pandera as pa
+from dotenv import load_dotenv
+from app.schema import ProdutoSchema
+from sqlalchemy import create_engine
 
-import os
 
 def load_settings():
     """Carrega as configurações a partir de variáveis de ambiente"""
@@ -23,6 +24,7 @@ def load_settings():
 
     return settings
 
+pa.check_output(ProdutoSchema)
 
 def extrair_do_sql(query: str) -> pd.DataFrame:
     """Extrai dados de um banco de dados SQL e retorna um DataFrame do pandas"""
@@ -35,14 +37,14 @@ def extrair_do_sql(query: str) -> pd.DataFrame:
     with engine.connect() as connection, connection.begin():
         df = pd.read_sql_query(query, connection)
 
-    return df_crm
+    return df
 
 
 if __name__ == "__main__":
     query = "SELECT * FROM produtos_bronze"
-    df_crm = extrair_do_sql(query)
-    schema_crm = pa.infer_schema(df_crm)
-    print(schema_crm)
+    # df_crm = extrair_do_sql(query)
+    # schema_crm = pa.infer_schema(df_crm)
+    # print(schema_crm)
 
-    with open("schema_crm.py", "w", encoding="utf-8") as f:
-        f.write(schema_crm.to_script())
+    # with open("schema_crm.py", "w", encoding="utf-8") as f:
+    #     f.write(schema_crm.to_script())
